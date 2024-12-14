@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 from decouple import config
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -90,7 +91,7 @@ DATABASES = {
         'PASSWORD': config('DATABASE_PASSWORD'),  # Contraseña
         'HOST': config('DATABASE_HOSTNAME'),     # Host local
         'PORT': config('DATABASE_PORT'),          # Puerto de PostgreSQL
-        'OPTIONS': config('DATABASE_OPTIONS'),          # Configuración adicional,
+        'OPTIONS': json.loads(config('DATABASE_OPTIONS')),          # Configuración adicional,
     }
 }
 
