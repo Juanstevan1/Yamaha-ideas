@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -83,8 +84,12 @@ WSGI_APPLICATION = 'yamaha_ideas.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DATABASE_NAME'),  # Nombre de la base de datos
+        'USER': config('DATABASE_USER'),      # Usuario
+        'PASSWORD': config('DATABASE_PASSWORD'),  # Contraseña
+        'HOST': config('DATABASE_HOSTNAME'),     # Host local
+        'PORT': config('DATABASE_PORT'),          # Puerto de PostgreSQL
     }
 }
 
@@ -141,6 +146,6 @@ LOGOUT_REDIRECT_URL = 'home'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-SESSION_COOKIE_AGE = 20  # 20 segundos (en segundos)
+SESSION_COOKIE_AGE = 1800  # 20 segundos (en segundos)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Expirar la sesión al cerrar el navegador
 SESSION_SAVE_EVERY_REQUEST = True  # Renovar la sesión en cada solicitud
