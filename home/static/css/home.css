@@ -1,0 +1,113 @@
+.card-custom {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.card-custom:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+.btn-primary-custom {
+    background-color: #C8102E; /* Rojo corporativo */
+    border-color: #C8102E;
+    color: #FFFFFF;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px; /* Make buttons oval */
+    font-weight: 500;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+.btn-primary-custom:hover {
+    transform: scale(1.05);
+}
+[data-scroll] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+[data-scroll].visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+/* Eliminar o corregir el selector universal incorrecto */
+.navbar {
+    background-color: #FFFFFF; /* Fondo blanco */
+    border-bottom: 2px solid #C8102E; /* Línea roja debajo de la navbar */
+}
+.navbar-nav .nav-link {
+    color: #000000; /* Negro */
+    font-weight: 500;
+}
+.navbar-nav .nav-link:hover {
+    color: #C8102E; /* Rojo al pasar el cursor */
+}
+.btn-primary-custom:hover {
+    background-color: #FFFFFF;
+    color: #C8102E;
+    border-color: #C8102E;
+}
+.section-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #000000; /* Negro */
+    margin-bottom: 1rem;
+}
+.section-title:hover {
+    color: #C8102E; /* Rojo al pasar el cursor */
+}
+.card-custom {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+.card-custom .card-body {
+    padding: 1.5rem;
+}
+.bg-primary-custom {
+    background-color: #00205B; /* Fondo azul corporativo */
+    color: #FFFFFF; /* Texto blanco */
+}
+.bg-light-custom {
+    background-color: #F5F5F5; /* Gris claro */
+}
+.footer {
+    background-color: #000000; /* Black background */
+    color: #FFFFFF; /* White text */
+    padding: 2rem 0;
+    border-top: 2px solid #C8102E; /* Línea roja encima del footer */
+}
+.footer a {
+    color: #FFFFFF;
+}
+.footer a:hover {
+    color: #C8102E; /* Rojo al pasar el cursor */
+}
+h1, h2, h3, h4, h5, h6,
+p, li {
+    color: #000000; /* Negro */
+}
+h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover,
+p:hover, li:hover {
+    color: black; /* Rojo al pasar el cursor */
+}
+.btn-outline-primary-custom {
+    background-color: transparent;
+    border-color: #C8102E;
+    color: #C8102E;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+.btn-outline-primary-custom:hover {
+    background-color: #C8102E;
+    color: #FFFFFF;
+}
+
+/* Evitar duplicaciones de .btn-primary-custom */
+/* ...existing code... */
+
+/* Opcional: Si necesitas estilos adicionales específicos para home, agrégalos aquí */
+
+/* ...existing code... */

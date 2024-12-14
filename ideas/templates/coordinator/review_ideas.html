@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4" style="color: black; font-family: 'Roboto', sans-serif; font-weight: bold;">
+        Revisar Ideas
+    </h1>
+
+    <!-- Filtros -->
+    <div class="card shadow-sm mb-4 p-4" style="background-color: #f8f9fa; border-radius: 8px;">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-6">
+                <label for="search" class="form-label fw-bold" style="font-size: 16px;">Buscar</label>
+                <input type="text" id="search" name="q" class="form-control shadow-sm" placeholder="Buscar por título o descripción" value="{{ query }}">
+            </div>
+            <div class="col-md-4">
+                <label for="state" class="form-label fw-bold" style="font-size: 16px;">Estado</label>
+                <select id="state" name="state" class="form-select shadow-sm">
+                    <option value="">Todos los estados</option>
+                    {% for state, state_label in state_choices %}
+                        <option value="{{ state }}" {% if state == state_filter %}selected{% endif %}>{{ state_label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn text-white shadow-sm" style="background-color: #004085; border-radius: 8px;">
+                    <i class="fas fa-filter me-2"></i> Filtrar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabla de Ideas -->
+    <div class="table-responsive">
+        <table class="table table-hover" style="font-size: 14px;">
+            <thead style="background-color: #b21f1f; color: #ffffff;">
+                <tr>
+                    <th>#</th>
+                    <th>Título</th>
+                    <th>Programa</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for idea in ideas %}
+                <tr style="{% cycle 'background-color: #f8f9fa;' 'background-color: #ffffff;' %}">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ idea.title }}</td>
+                    <td>{{ idea.program.name }}</td>
+                    <td>{{ idea.get_state_display }}</td>
+                    <td>
+                        <a href="{% url 'coordinator_review_idea' idea.id %}" 
+                           class="btn btn-sm text-white shadow-sm" 
+                           style="background-color: #ffc107; border-radius: 4px;">
+                            Revisar
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">No se encontraron ideas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

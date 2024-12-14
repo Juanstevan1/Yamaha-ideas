@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h2 class="card-title">Editar Idea</h2>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row g-4">
+                    <!-- Campo Título -->
+                    <div class="col-md-12">
+                        <label for="id_title" class="form-label fw-bold">Título</label>
+                        {{ form.title|add_class:"form-control" }}
+                    </div>
+
+                    <!-- Campo Descripción -->
+                    <div class="col-md-12">
+                        <label for="id_description" class="form-label fw-bold">Descripción</label>
+                        {{ form.description|add_class:"form-control" }}
+                    </div>
+
+                    <!-- Campo Archivo Prototipo -->
+                    <div class="col-md-6">
+                        <label for="id_prototype_file" class="form-label fw-bold">Archivo Prototipo</label>
+                        {{ form.prototype_file|add_class:"form-control" }}
+                        {% if idea.prototype_file %}
+                            <a href="{{ idea.prototype_file.url }}" class="btn btn-link mt-2">Descargar Archivo Actual</a>
+                        {% endif %}
+                    </div>
+
+                    <!-- Campo Imagen Relacionada -->
+                    <div class="col-md-6">
+                        <label for="id_related_image" class="form-label fw-bold">Imagen Relacionada</label>
+                        {{ form.related_image|add_class:"form-control" }}
+                        {% if idea.related_image %}
+                            <a href="{{ idea.related_image.url }}" class="btn btn-link mt-2">Ver Imagen Actual</a>
+                        {% endif %}
+                    </div>
+
+                    <!-- Campos Dinámicos -->
+                    {% for field in form.dynamic_fields %}
+                        <div class="col-md-6">
+                            <label for="{{ field.id_for_label }}" class="form-label fw-bold">{{ field.label }}</label>
+                            {{ field|add_class:"form-control" }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Botones de Envío -->
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success me-2">Guardar Cambios</button>
+                    <a href="{% url 'my_ideas' %}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4" style="color: black; font-family: 'Roboto', sans-serif; font-weight: bold;">
+        Revisión de Ideas
+    </h1>
+
+    <!-- Filtros -->
+    <div class="card shadow-sm mb-4 p-4" style="border-radius: 10px; background-color: #f8f9fa;">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-6">
+                <label for="search" class="form-label fw-bold" style="font-size: 16px;">Buscar</label>
+                <input type="text" id="search" name="q" class="form-control shadow-sm" 
+                       placeholder="Buscar por título o descripción" value="{{ query }}" style="border-radius: 8px;">
+            </div>
+            <div class="col-md-4">
+                <label for="state" class="form-label fw-bold" style="font-size: 16px;">Estado</label>
+                <select id="state" name="state" class="form-select shadow-sm" style="border-radius: 8px;">
+                    <option value="">Todos los estados</option>
+                    {% for state, state_label in state_choices %}
+                        <option value="{{ state }}" {% if state == state_filter %}selected{% endif %}>
+                            {{ state_label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn text-white shadow-sm" 
+                        style="background-color: #004085; font-size: 16px; border-radius: 8px;">
+                    <i class="fas fa-filter me-2"></i> Filtrar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Lista de Ideas para Revisar -->
+    <div class="row g-4">
+        {% for idea in ideas %}
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100" style="border-radius: 10px;">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold" style="color: #004085; font-size: 18px;">{{ idea.title }}</h5>
+                        <p class="card-text text-muted" style="font-size: 14px;">{{ idea.description|truncatewords:30 }}</p>
+                        <p class="text-muted" style="font-size: 14px;"><strong>Estado:</strong> {{ idea.get_state_display }}</p>
+                        <p class="text-muted" style="font-size: 14px;"><strong>Fecha de creación:</strong> {{ idea.creation_date|date:"d/m/Y" }}</p>
+                    </div>
+                    <div class="card-footer text-end bg-light" style="border-top: none; border-radius: 0 0 10px 10px;">
+                        <a href="{% url 'committee_review_idea' idea.id %}" 
+                           class="btn text-white shadow-sm" style="background-color: #004085; border-radius: 8px;">
+                            Revisar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Lista de Ideas Revisadas -->
+    <h2 class="mt-5 mb-4" style="color: black; font-family: 'Roboto', sans-serif; font-weight: bold;">Ideas Revisadas</h2>
+    <div class="row g-4">
+        {% for idea in reviewed_ideas %}
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100" style="border-radius: 10px;">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold" style="color: #004085; font-size: 18px;">{{ idea.title }}</h5>
+                        <p class="card-text text-muted" style="font-size: 14px;">{{ idea.description|truncatewords:30 }}</p>
+                        <p class="text-muted" style="font-size: 14px;"><strong>Estado:</strong> {{ idea.get_state_display }}</p>
+                        <p class="text-muted" style="font-size: 14px;"><strong>Fecha de creación:</strong> {{ idea.creation_date|date:"d/m/Y" }}</p>
+                    </div>
+                    <div class="card-footer text-end bg-light" style="border-top: none; border-radius: 0 0 10px 10px;">
+                        <a href="{% url 'committee_review_idea' idea.id %}" 
+                           class="btn text-white shadow-sm" style="background-color: #6c757d; border-radius: 8px;">
+                            Ver Detalles
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

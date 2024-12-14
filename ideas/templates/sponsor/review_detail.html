@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4" style="color: black; font-family: 'Roboto', sans-serif; font-weight: bold;">
+        Revisar Propuesta
+    </h1>
+
+    <div class="card shadow-lg p-4 border-0">
+        <h2 class="card-title text-primary" style="font-family: 'Roboto', sans-serif; font-weight: bold;">
+            {{ idea.title }}
+        </h2>
+        <p class="card-text"><strong>Descripción:</strong> {{ idea.description }}</p>
+        <p class="card-text"><strong>Programa:</strong> {{ idea.program.name }}</p>
+
+        <!-- Campos Extras -->
+        <h4 class="mt-3" style="color: #333333; font-family: 'Roboto', sans-serif;">Campos Extras:</h4>
+        <ul class="list-group list-group-flush mb-3">
+            {% for key, value in idea.extra_data.items %}
+            <li class="list-group-item"><strong>{{ key|capfirst }}:</strong> {{ value }}</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Equipo Asignado -->
+        <h4 class="mt-3" style="color: #333333; font-family: 'Roboto', sans-serif;">Equipo Asignado:</h4>
+        <ul class="list-group list-group-flush mb-3">
+            {% for member in idea.team.members.all %}
+            <li class="list-group-item">{{ member.get_full_name }} ({{ member.email }})</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Formulario para registrar decisión -->
+        <form method="post" class="mt-4">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="decision" class="form-label" style="font-weight: bold;">Decisión:</label>
+                <select name="decision" id="decision" class="form-select shadow-sm" style="border-radius: 8px;">
+                    <option value="">Seleccione...</option>
+                    <option value="approved" {% if sponsor_decision and sponsor_decision.decision == 'approved' %}selected{% endif %}>Aprobar</option>
+                    <option value="rejected" {% if sponsor_decision and sponsor_decision.decision == 'rejected' %}selected{% endif %}>Rechazar</option>
+                    <option value="adjustments_required" {% if sponsor_decision and sponsor_decision.decision == 'adjustments_required' %}selected{% endif %}>Requiere Ajustes</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="comments" class="form-label" style="font-weight: bold;">Comentarios:</label>
+                <textarea name="comments" id="comments" class="form-control shadow-sm" rows="4" style="border-radius: 8px;">{% if sponsor_decision %}{{ sponsor_decision.comments }}{% else %}{% endif %}</textarea>
+            </div>
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn text-white shadow-sm" style="background-color: #28a745; border-radius: 8px;">
+                    Guardar Decisión
+                </button>
+                <a href="{% url 'sponsor_review_list' %}" class="btn text-white shadow-sm" style="background-color: #6c757d; border-radius: 8px;">
+                    Volver
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

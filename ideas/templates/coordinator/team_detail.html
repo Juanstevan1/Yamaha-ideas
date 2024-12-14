@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4" style="color: #b21f1f; font-family: 'Roboto', sans-serif; font-weight: bold;">
+        Detalles del Equipo
+    </h1>
+
+    <div class="card shadow-lg p-4" style="border-radius: 10px; background-color: #f8f9fa;">
+        <h2 class="card-title fw-bold" style="color: #004085; font-size: 24px;">{{ team.name }}</h2>
+        <p class="card-text text-muted"><strong>Idea:</strong> {{ team.idea.title }}</p>
+        <p class="card-text text-muted"><strong>Descripción de la Idea:</strong> {{ team.idea.description }}</p>
+
+        <h4 class="mt-4" style="color: #b21f1f; font-family: 'Roboto', sans-serif;">Miembros del Equipo</h4>
+        <ul class="list-group mb-4" style="border-radius: 8px;">
+            {% for member in team.members.all %}
+            <li class="list-group-item" style="font-size: 14px; font-family: 'Roboto', sans-serif;">
+                {{ member.get_full_name }} ({{ member.email }})
+            </li>
+            {% endfor %}
+        </ul>
+
+        <h4 class="mt-4" style="color: #b21f1f; font-family: 'Roboto', sans-serif;">Comentarios del Sponsor</h4>
+        <div class="alert alert-warning" style="border-radius: 8px;">
+            <p style="font-size: 14px; font-family: 'Roboto', sans-serif;">{{ team.idea.sponsor_adjustment_comments }}</p>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a href="{% url 'idea_detail' team.idea.id %}" 
+               class="btn text-white shadow-sm" style="background-color: #004085; border-radius: 8px;">
+                Ver Idea
+            </a>
+            <a href="{% url 'team_edit_idea' team.idea.id %}" 
+               class="btn text-white shadow-sm" style="background-color: #ffc107; color: black; border-radius: 8px;">
+                Editar Idea
+            </a>
+            <a href="{% url 'coordinator_assign_team' %}" 
+               class="btn text-white shadow-sm" style="background-color: #6c757d; border-radius: 8px;">
+                Volver
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

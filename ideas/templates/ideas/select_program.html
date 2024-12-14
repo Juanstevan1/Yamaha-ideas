@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="container mt-5 mb-5 p-4 border rounded" style="max-width: 500px;">
+        <h2 class="mb-4 text-center">Seleccionar Programa</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="program" class="form-label">Programa:</label>
+                <select name="program" id="program" class="form-select">
+                    {% for program in programs %}
+                    <option value="{{ program.id }}">{{ program.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary-custom w-100">Continuar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg" >
+        <div class="card-header bg-primary text-white" style="background-color: #004085; border-radius: 8px;">
+            <h2 class="card-title" >{{ idea.title }}</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Descripción:</strong> {{ idea.description }}</p>
+            <p><strong>Estado:</strong> {{ idea.get_state_display }}</p>
+            <p><strong>Programa:</strong> {{ idea.program.name }}</p>
+            <p><strong>Creada el:</strong> {{ idea.creation_date }}</p>
+        
+            <!-- Mostrar comentario personalizado del coordinador -->
+            {% if coordinator_comments %}
+                <div class="alert alert-info mt-4">
+                    <h5>Comentario del Coordinador:</h5>
+                    <p>{{ coordinator_comments }}</p>
+                </div>
+            {% else %}
+                <p class="text-muted">El coordinador no ha dejado comentarios.</p>
+            {% endif %}
+        
+            <!-- Mostrar datos extras -->
+            {% if extra_data %}
+                <h5 class="mt-4">Campos Extras</h5>
+                <ul class="list-group">
+                    {% for key, value in extra_data.items %}
+                        <li class="list-group-item">
+                            <strong>{{ key|capfirst }}:</strong> {{ value }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">No hay datos adicionales.</p>
+            {% endif %}
+        
+            <!-- Archivos -->
+            <div class="mt-4">
+                {% if idea.prototype_file %}
+                    <p><strong>Archivo Prototipo:</strong> <a href="{{ idea.prototype_file.url }}" class="btn btn-link">Descargar</a></p>
+                {% endif %}
+                {% if idea.related_image %}
+                    <p><strong>Imagen Relacionada:</strong></p>
+                    <img src="{{ idea.related_image.url }}" alt="Imagen relacionada" class="img-thumbnail" style="max-width: 500px; width: 100%; height: auto;">
+                    <p><a href="{{ idea.related_image.url }}" download class="btn btn-link">Descargar Imagen</a></p>
+                {% endif %}
+            </div>
+
+            <!-- Mostrar calificaciones del comité -->
+            <h2 class="mt-5 mb-4">Calificaciones del Comité</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Miembro del Comité</th>
+                            <th>Calificación</th>
+                            <th>Comentarios</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rating in committee_ratings %}
+                        <tr>
+                            <td>{{ rating.committee_member.username }}</td>
+                            <td>{{ rating.rating }}</td>
+                            <td>{{ rating.comments }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center">No hay calificaciones del comité.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>        
+        <div class="card-footer">
+            <a href="{% url 'idea_edit' idea.id %}" class="btn btn-warning">Editar Idea</a>
+            <a href="{% url 'my_ideas' %}" class="btn btn-secondary">Volver</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

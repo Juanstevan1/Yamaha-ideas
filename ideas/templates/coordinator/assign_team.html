@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-5" style="color: black; font-family: 'Roboto', sans-serif; font-weight: 700;">
+        Asignar Equipos
+    </h1>
+
+    <!-- Filtros -->
+    <div class="card shadow-lg mb-5 p-4 border-0" style="background-color: #f8f9fa; border-radius: 10px;">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-8">
+                <label for="search" class="form-label fw-bold" style="font-size: 16px;">Buscar</label>
+                <input type="text" id="search" name="q" class="form-control shadow-sm" placeholder="Buscar por título o descripción" value="{{ query }}">
+            </div>
+            <div class="col-md-4 d-grid">
+                <button type="submit" class="btn text-white shadow-sm" 
+                        style="background-color: #004085; font-size: 16px; border-radius: 8px;">
+                    <i class="fas fa-filter me-2"></i> Filtrar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Lista de Ideas -->
+    <div class="row g-4">
+        {% for idea in ideas %}
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100 border-0" style="border-radius: 10px;">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold" style="color: #b21f1f; font-size: 18px;">{{ idea.title }}</h5>
+                        <p class="card-text text-muted mb-3" style="font-size: 14px;">{{ idea.description|truncatewords:30 }}</p>
+                        <p class="text-muted mb-2" style="font-size: 14px;">
+                            <strong>Estado:</strong> <span class="fw-bold text-dark">{{ idea.get_state_display }}</span>
+                        </p>
+                        <p class="text-muted" style="font-size: 14px;">
+                            <strong>Fecha de creación:</strong> {{ idea.creation_date|date:"d/m/Y" }}
+                        </p>
+                    </div>
+                    <div class="card-footer bg-light d-flex justify-content-end align-items-center border-top-0">
+                        <a href="{% url 'coordinator_assign_team_detail' idea.id %}" 
+                           class="btn text-white btn-sm" style="background-color: #004085; border-radius: 8px;">
+                            <i class="fas fa-users me-2"></i> Asignar Equipo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Lista de Equipos Existentes -->
+    <div class="mt-5">
+        <h2 class="text-center mb-4" style="color: black; font-family: 'Roboto', sans-serif; font-weight: 700;">
+            Equipos Existentes
+        </h2>
+        <div class="row g-4">
+            {% for team in teams %}
+                <div class="col-md-6">
+                    <div class="card shadow-sm h-100 border-0" style="border-radius: 10px;">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold" style="color: #004085; font-size: 18px;">{{ team.name }}</h5>
+                            <p class="card-text text-muted" style="font-size: 14px;">
+                                <strong>Idea:</strong> {{ team.idea.title }}
+                            </p>
+                            <p class="card-text text-muted" style="font-size: 14px;">
+                                <strong>Miembros:</strong>
+                                <ul class="ps-3">
+                                    {% for member in team.members.all %}
+                                        <li>{{ member.get_full_name }} ({{ member.email }})</li>
+                                    {% endfor %}
+                                </ul>
+                            </p>
+                        </div>
+                        <div class="card-footer bg-light d-flex justify-content-between align-items-center border-top-0">
+                            <a href="{% url 'team_detail' team.id %}" 
+                               class="btn text-white btn-sm" style="background-color: #004085; border-radius: 8px;">
+                                <i class="fas fa-eye me-2"></i> Ver
+                            </a>
+                            <a href="{% url 'coordinator_assign_team_detail' team.idea.id %}" 
+                               class="btn text-white btn-sm" style="background-color: #ffc107; border-radius: 8px; color: black;">
+                                <i class="fas fa-edit me-2"></i> Editar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4" style="color: #b21f1f; font-family: 'Roboto', sans-serif; font-weight: bold;">
+        Asignar Equipo a la Idea
+    </h1>
+
+    <div class="card shadow-lg p-4" style="border-radius: 10px; background-color: #f8f9fa;">
+        <div class="card-body">
+            <h2 class="card-title fw-bold" style="color: #004085;">{{ idea.title }}</h2>
+            <p class="card-text text-muted"><strong>Descripción:</strong> {{ idea.description }}</p>
+            <p class="card-text text-muted"><strong>Programa:</strong> {{ idea.program.name }}</p>
+
+            <!-- Mostrar comentario del sponsor si existe -->
+            {% if sponsor_comment and idea.state == "adjustments_required_by_sponsor" %}
+            <div class="alert alert-warning mt-4" style="border-radius: 8px;">
+                <strong>Comentario del Sponsor:</strong>
+                <p>{{ sponsor_comment }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Formulario para asignar equipo -->
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label for="team_name" class="form-label fw-bold" style="font-size: 16px;">
+                        Nombre del Equipo:
+                    </label>
+                    <input type="text" name="team_name" id="team_name" class="form-control shadow-sm" 
+                           placeholder="Nombre del equipo" required style="border-radius: 8px;">
+                </div>
+                <div class="mb-4">
+                    <label for="team_members" class="form-label fw-bold" style="font-size: 16px;">
+                        Miembros del Equipo:
+                    </label>
+                    <div>
+                        {% for member in team_members %}
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="member_{{ member.id }}" 
+                                   name="team_members" value="{{ member.id }}" style="border-radius: 5px;">
+                            <label class="form-check-label" for="member_{{ member.id }}">
+                                {{ member.get_full_name }} ({{ member.email }})
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn text-white" 
+                            style="background-color: #004085; border-radius: 8px; padding: 10px 20px;">
+                        Guardar
+                    </button>
+                    <a href="{% url 'coordinator_assign_team' %}" 
+                       class="btn text-white" style="background-color: #6c757d; border-radius: 8px; padding: 10px 20px;">
+                        Volver
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

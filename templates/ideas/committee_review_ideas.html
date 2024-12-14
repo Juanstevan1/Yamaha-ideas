@@ -1,0 +1,25 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Revisar Ideas</h2>
+    <form method="get" class="form-inline mb-3">
+        <input type="text" name="q" class="form-control mr-2" placeholder="Buscar..." value="{{ query }}">
+        <select name="state" class="form-control mr-2">
+            <option value="">Todos los estados</option>
+            {% for value, label in state_choices %}
+                <option value="{{ value }}" {% if state_filter == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+    </form>
+    <ul class="list-group">
+        {% for idea in ideas %}
+            <li class="list-group-item">
+                <a href="{% url 'committee_review_idea' idea.id %}">{{ idea.title }}</a>
+                <span class="badge badge-secondary">{{ idea.get_state_display }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

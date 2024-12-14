@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Revisar Idea</h1>
+
+    <div class="card shadow-lg p-4">
+        <h2 class="card-title text-white bg-primary p-3 rounded">{{ idea.title }}</h2>
+        <div class="card-body">
+            <p><strong>Descripción:</strong> {{ idea.description }}</p>
+            <p><strong>Programa:</strong> {{ idea.program.name }}</p>
+            <p><strong>Estado Actual:</strong> {{ idea.state }}</p>
+
+            <!-- Mostrar Campos Extras -->
+            <h5 class="mt-4">Campos Extras</h5>
+            {% if idea.extra_data %}
+                <ul class="list-group">
+                    {% for key, value in idea.extra_data.items %}
+                        <li class="list-group-item">
+                            <strong>{{ key|capfirst }}:</strong> {{ value }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No hay campos extras registrados.</p>
+            {% endif %}
+
+            <!-- Mostrar archivos -->
+            <h5 class="mt-4">Archivos Adjuntos</h5>
+            <ul class="list-group">
+                {% if idea.prototype_file %}
+                    <li class="list-group-item">
+                        <strong>Prototipo:</strong>
+                        <a href="{{ idea.prototype_file.url }}" class="btn btn-link" download>Descargar Prototipo</a>
+                    </li>
+                {% else %}
+                    <li class="list-group-item">No se ha subido un archivo de prototipo.</li>
+                {% endif %}
+                {% if idea.related_image %}
+                    <li class="list-group-item">
+                        <strong>Imagen Relacionada:</strong>
+                        <img src="{{ idea.related_image.url }}" alt="Imagen relacionada" class="img-fluid mt-2" style="max-width: 300px;">
+                    </li>
+                {% else %}
+                    <li class="list-group-item">No se ha subido una imagen relacionada.</li>
+                {% endif %}
+            </ul>
+
+            <!-- Comentarios del Coordinador -->
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="coordinator_review_comments" class="form-label"><strong>Comentarios del Coordinador:</strong></label>
+                    <textarea name="coordinator_review_comments" id="coordinator_review_comments" class="form-control" rows="4">{{ idea.coordinator_review_comments }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="state" class="form-label"><strong>Estado:</strong></label>
+                    <select name="state" id="state" class="form-select">
+                        {% for key, label in idea.STATES %}
+                            {% if key in allowed_states %}
+                                <option value="{{ key }}" {% if idea.state == key %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    <a href="{% url 'coordinator_review_ideas' %}" class="btn btn-secondary">Volver</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

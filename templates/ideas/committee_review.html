@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Evaluar Idea</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-group">
+            <label for="state">Estado</label>
+            <select id="state" name="state" class="form-control">
+                {% for value, label in states %}
+                    <option value="{{ value }}" {% if idea.state == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+    </form>
+</div>
+{% endblock %}
