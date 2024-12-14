@@ -90,6 +90,7 @@ DATABASES = {
         'PASSWORD': config('DATABASE_PASSWORD'),  # Contraseña
         'HOST': config('DATABASE_HOSTNAME'),     # Host local
         'PORT': config('DATABASE_PORT'),          # Puerto de PostgreSQL
+        'OPTIONS': config('DATABASE_OPTIONS'),          # Configuración adicional,
     }
 }
 
