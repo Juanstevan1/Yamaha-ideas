@@ -141,6 +141,6 @@ LOGOUT_REDIRECT_URL = 'home'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-SESSION_COOKIE_AGE = 20  # 20 segundos (en segundos)
+SESSION_COOKIE_AGE = 1800  # 20 segundos (en segundos)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Expirar la sesión al cerrar el navegador
 SESSION_SAVE_EVERY_REQUEST = True  # Renovar la sesión en cada solicitud
