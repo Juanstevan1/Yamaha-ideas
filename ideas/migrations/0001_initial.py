@@ -15,63 +15,200 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Idea',
+            name="Idea",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200)),
-                ('description', models.TextField()),
-                ('state', models.CharField(choices=[('pending', 'Pending'), ('reviewed_by_coordinator', 'Reviewed by Coordinator'), ('evaluated_by_committee', 'Evaluated by Committee'), ('approved', 'Approved'), ('rejected', 'Rejected'), ('in_progress', 'In Progress'), ('completed', 'Completed')], default='pending', max_length=30)),
-                ('creation_date', models.DateTimeField(auto_now_add=True)),
-                ('coordinator_review_comments', models.TextField(blank=True, null=True)),
-                ('committee_feedback', models.TextField(blank=True, null=True)),
-                ('committee_rating', models.FloatField(blank=True, null=True)),
-                ('sponsor_approval_date', models.DateTimeField(blank=True, null=True)),
-                ('assigned_team', models.ManyToManyField(blank=True, related_name='team_assigned_ideas', to=settings.AUTH_USER_MODEL)),
-                ('employee', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='proposed_ideas', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=200)),
+                ("description", models.TextField()),
+                (
+                    "state",
+                    models.CharField(
+                        choices=[
+                            ("pending", "Pending"),
+                            ("reviewed_by_coordinator", "Reviewed by Coordinator"),
+                            ("evaluated_by_committee", "Evaluated by Committee"),
+                            ("approved", "Approved"),
+                            ("rejected", "Rejected"),
+                            ("in_progress", "In Progress"),
+                            ("completed", "Completed"),
+                        ],
+                        default="pending",
+                        max_length=30,
+                    ),
+                ),
+                ("creation_date", models.DateTimeField(auto_now_add=True)),
+                (
+                    "coordinator_review_comments",
+                    models.TextField(blank=True, null=True),
+                ),
+                ("committee_feedback", models.TextField(blank=True, null=True)),
+                ("committee_rating", models.FloatField(blank=True, null=True)),
+                ("sponsor_approval_date", models.DateTimeField(blank=True, null=True)),
+                (
+                    "assigned_team",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="team_assigned_ideas",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "employee",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="proposed_ideas",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='CommitteeRating',
+            name="CommitteeRating",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('rating', models.FloatField()),
-                ('comments', models.TextField(blank=True, null=True)),
-                ('committee_member', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='given_ratings', to=settings.AUTH_USER_MODEL)),
-                ('idea', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ratings', to='ideas.idea')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("rating", models.FloatField()),
+                ("comments", models.TextField(blank=True, null=True)),
+                (
+                    "committee_member",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="given_ratings",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "idea",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="ratings",
+                        to="ideas.idea",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Program',
+            name="Program",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, unique=True)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('coordinators', models.ManyToManyField(blank=True, related_name='coordinated_programs', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100, unique=True)),
+                ("description", models.TextField(blank=True, null=True)),
+                (
+                    "coordinators",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="coordinated_programs",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='idea',
-            name='program',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='ideas', to='ideas.program'),
+            model_name="idea",
+            name="program",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="ideas",
+                to="ideas.program",
+            ),
         ),
         migrations.CreateModel(
-            name='SponsorDecision',
+            name="SponsorDecision",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('decision', models.CharField(choices=[('approved', 'Approved'), ('rejected', 'Rejected'), ('adjustments_required', 'Adjustments Required')], max_length=20)),
-                ('comments', models.TextField(blank=True, null=True)),
-                ('decision_date', models.DateTimeField(auto_now_add=True)),
-                ('idea', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='sponsor_decision_entry', to='ideas.idea')),
-                ('sponsor', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sponsor_decisions', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "decision",
+                    models.CharField(
+                        choices=[
+                            ("approved", "Approved"),
+                            ("rejected", "Rejected"),
+                            ("adjustments_required", "Adjustments Required"),
+                        ],
+                        max_length=20,
+                    ),
+                ),
+                ("comments", models.TextField(blank=True, null=True)),
+                ("decision_date", models.DateTimeField(auto_now_add=True)),
+                (
+                    "idea",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="sponsor_decision_entry",
+                        to="ideas.idea",
+                    ),
+                ),
+                (
+                    "sponsor",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="sponsor_decisions",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Team',
+            name="Team",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, unique=True)),
-                ('idea', models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='team', to='ideas.idea')),
-                ('members', models.ManyToManyField(related_name='teams', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100, unique=True)),
+                (
+                    "idea",
+                    models.OneToOneField(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="team",
+                        to="ideas.idea",
+                    ),
+                ),
+                (
+                    "members",
+                    models.ManyToManyField(
+                        related_name="teams", to=settings.AUTH_USER_MODEL
+                    ),
+                ),
             ],
         ),
     ]

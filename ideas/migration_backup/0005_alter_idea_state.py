@@ -6,13 +6,31 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ideas', '0004_idea_sponsor_adjustment_comments_alter_idea_state'),
+        ("ideas", "0004_idea_sponsor_adjustment_comments_alter_idea_state"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='idea',
-            name='state',
-            field=models.CharField(choices=[('pending', 'Pending'), ('reviewed_by_coordinator', 'Reviewed by Coordinator'), ('coordinator_rejected', 'Rejected by Coordinator'), ('committee_in_review', 'Under Committee Review'), ('committee_approved', 'Approved by Committee'), ('committee_rejected', 'Rejected by Committee'), ('sponsor_rejected', 'Rejected by Sponsor'), ('in_progress', 'In Progress'), ('completed', 'Completed'), ('adjustments_required_by_sponsor', 'Adjustments Required by Sponsor')], default='pending', max_length=50),
+            model_name="idea",
+            name="state",
+            field=models.CharField(
+                choices=[
+                    ("pending", "Pending"),
+                    ("reviewed_by_coordinator", "Reviewed by Coordinator"),
+                    ("coordinator_rejected", "Rejected by Coordinator"),
+                    ("committee_in_review", "Under Committee Review"),
+                    ("committee_approved", "Approved by Committee"),
+                    ("committee_rejected", "Rejected by Committee"),
+                    ("sponsor_rejected", "Rejected by Sponsor"),
+                    ("in_progress", "In Progress"),
+                    ("completed", "Completed"),
+                    (
+                        "adjustments_required_by_sponsor",
+                        "Adjustments Required by Sponsor",
+                    ),
+                ],
+                default="pending",
+                max_length=50,
+            ),
         ),
     ]

@@ -10,24 +10,60 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('ideas', '0001_initial'),
+        ("ideas", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Notification',
+            name="Notification",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('type', models.CharField(choices=[('idea_update', 'Idea Update'), ('team_assignment', 'Team Assignment'), ('project_status', 'Project Status'), ('general', 'General')], default='general', max_length=20)),
-                ('message', models.TextField()),
-                ('read', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('related_idea', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='notifications', to='ideas.idea')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='notifications', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[
+                            ("idea_update", "Idea Update"),
+                            ("team_assignment", "Team Assignment"),
+                            ("project_status", "Project Status"),
+                            ("general", "General"),
+                        ],
+                        default="general",
+                        max_length=20,
+                    ),
+                ),
+                ("message", models.TextField()),
+                ("read", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "related_idea",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="notifications",
+                        to="ideas.idea",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="notifications",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-created_at'],
+                "ordering": ["-created_at"],
             },
         ),
     ]

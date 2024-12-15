@@ -6,28 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ideas', '0001_initial'),
+        ("ideas", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='idea',
-            name='extra_data',
+            model_name="idea",
+            name="extra_data",
             field=models.JSONField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='idea',
-            name='prototype_file',
-            field=models.FileField(blank=True, null=True, upload_to='prototypes/'),
+            model_name="idea",
+            name="prototype_file",
+            field=models.FileField(blank=True, null=True, upload_to="prototypes/"),
         ),
         migrations.AddField(
-            model_name='idea',
-            name='related_image',
-            field=models.ImageField(blank=True, null=True, upload_to='images/'),
+            model_name="idea",
+            name="related_image",
+            field=models.ImageField(blank=True, null=True, upload_to="images/"),
         ),
         migrations.AddField(
-            model_name='program',
-            name='form_config',
+            model_name="program",
+            name="form_config",
             field=models.JSONField(blank=True, null=True),
         ),
     ]
