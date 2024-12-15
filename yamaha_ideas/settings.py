@@ -138,7 +138,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 # STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_DIR = os.path.join(BASE_DIR, 'yamaha_ideas', 'static')
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = 'staticfiles'
 
 
 # Archivos de medios (imágenes, prototipos, etc.)
