@@ -136,10 +136,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_DIR = os.path.join(BASE_DIR, 'yamaha_ideas', 'static')
-STATIC_ROOT = 'staticfiles'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Archivos de medios (imágenes, prototipos, etc.)
 MEDIA_URL = '/media/'
