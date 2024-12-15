@@ -37,7 +37,8 @@ jobs:
             pip install -r requirements.txt
             python manage.py migrate
             python manage.py collectstatic --noinput
-            gunicorn --bind 127.0.0.1:8000 yamaha_ideas.wsgi
+            killall gunicorn
+            gunicorn --bind 127.0.0.1:8000 yamaha_ideas.wsgi:application --daemon
 
       - name: Verify Deployment
         run: |
