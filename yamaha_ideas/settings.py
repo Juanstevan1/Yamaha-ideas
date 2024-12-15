@@ -30,6 +30,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['3.145.37.6', 'localhost', '127.0.0.1']
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://3.145.37.6:8080',
+    'https://3.145.37.6:8080',  # Si usas HTTPS en el futuro
+]
+
 
 # Application definition
 
