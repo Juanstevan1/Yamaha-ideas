@@ -7,6 +7,7 @@
     </h1>
 
     <div class="card shadow-lg p-4 border-0">
+        <!-- Información principal -->
         <h2 class="card-title text-primary" style="font-family: 'Roboto', sans-serif; font-weight: bold;">
             {{ idea.title }}
         </h2>
@@ -14,22 +15,46 @@
         <p class="card-text"><strong>Programa:</strong> {{ idea.program.name }}</p>
 
         <!-- Campos Extras -->
+        {% if idea.extra_data %}
         <h4 class="mt-3" style="color: #333333; font-family: 'Roboto', sans-serif;">Campos Extras:</h4>
         <ul class="list-group list-group-flush mb-3">
             {% for key, value in idea.extra_data.items %}
             <li class="list-group-item"><strong>{{ key|capfirst }}:</strong> {{ value }}</li>
             {% endfor %}
         </ul>
+        {% endif %}
+
+        <!-- Archivos Adjuntos -->
+        <h4 class="mt-3" style="color: #333333; font-family: 'Roboto', sans-serif;">Archivos Adjuntos:</h4>
+        <ul class="list-group list-group-flush mb-3">
+            {% if idea.prototype_file %}
+            <li class="list-group-item">
+                Prototipo: <a href="{{ idea.prototype_file.url }}" target="_blank" class="text-decoration-none">
+                    Descargar Prototipo
+                </a>
+            </li>
+            {% endif %}
+            {% if idea.related_image %}
+            <li class="list-group-item">
+                Imagen Relacionada: <br>
+                <img src="{{ idea.related_image.url }}" alt="Imagen Relacionada" style="max-width: 300px; border-radius: 8px;">
+            </li>
+            {% endif %}
+        </ul>
 
         <!-- Equipo Asignado -->
+        {% if idea.team %}
         <h4 class="mt-3" style="color: #333333; font-family: 'Roboto', sans-serif;">Equipo Asignado:</h4>
         <ul class="list-group list-group-flush mb-3">
             {% for member in idea.team.members.all %}
             <li class="list-group-item">{{ member.get_full_name }} ({{ member.email }})</li>
             {% endfor %}
         </ul>
+        {% else %}
+        <p class="text-muted">No hay equipo asignado.</p>
+        {% endif %}
 
-        <!-- Formulario para registrar decisión -->
+        <!-- Formulario de decisión del Sponsor -->
         <form method="post" class="mt-4">
             {% csrf_token %}
             <div class="mb-3">
@@ -43,7 +68,8 @@
             </div>
             <div class="mb-3">
                 <label for="comments" class="form-label" style="font-weight: bold;">Comentarios:</label>
-                <textarea name="comments" id="comments" class="form-control shadow-sm" rows="4" style="border-radius: 8px;">{% if sponsor_decision %}{{ sponsor_decision.comments }}{% else %}{% endif %}</textarea>
+                <textarea name="comments" id="comments" class="form-control shadow-sm" rows="4" style="border-radius: 8px;">
+{% if sponsor_decision %}{{ sponsor_decision.comments }}{% endif %}</textarea>
             </div>
             <div class="d-flex justify-content-between mt-4">
                 <button type="submit" class="btn text-white shadow-sm" style="background-color: #28a745; border-radius: 8px;">

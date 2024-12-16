@@ -24,6 +24,17 @@
         </div>
     </div>
 
+    {% if messages %}
+    <div class="container mt-4">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} shadow-sm text-center" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+
     <!-- Actions Section -->
     <div class="row g-4 mb-4">
         {% for role, role_actions in actions.items %}
@@ -60,7 +71,7 @@
         </ul>
     </div>
 
-    <!-- Global Indicators Section -->
+    <!--Indicators Section -->
     <div class="bg-white shadow-lg rounded-lg p-4">
         <h5 class="fw-bold"><i class="fas fa-chart-bar me-2"></i>Indicadores Globales</h5>
         <div class="row g-4">
@@ -71,8 +82,9 @@
                     <p>Revisadas: {{ user_data.reviewed_ideas }}</p>
                     <p>Aprobadas: {{ user_data.approved_ideas }}</p>
                     <p>Rechazadas: {{ user_data.rejected_ideas }}</p>
+                    <p>Completadas: {{ user_data.completed_ideas }}</p>
                 </div>
-            </div>
+            </div>            
             <div class="col-md-4">
                 <div class="bg-light p-3 rounded shadow-sm">
                     <h6 class="fw-bold"><i class="fas fa-users me-2"></i>Equipos Asignados</h6>

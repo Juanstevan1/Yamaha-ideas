@@ -71,6 +71,24 @@ def my_ideas(request):
     if state_filter:
         employee_ideas = employee_ideas.filter(state=state_filter)
 
+    # Diccionario de íconos para los estados
+    state_icons = {
+        "pending": "fas fa-hourglass-start",
+        "reviewed_by_coordinator": "fas fa-search",
+        "coordinator_rejected": "fas fa-times-circle",
+        "committee_in_review": "fas fa-comments",
+        "committee_approved": "fas fa-check-circle",
+        "committee_rejected": "fas fa-times-circle",
+        "sponsor_rejected": "fas fa-thumbs-down",
+        "in_progress": "fas fa-cog",
+        "completed": "fas fa-check-double",
+        "adjustments_required_by_sponsor": "fas fa-edit",
+    }
+
+    # Asignar ícono correspondiente a cada idea
+    for idea in employee_ideas:
+        idea.icon = state_icons.get(idea.state, "fas fa-question-circle")
+
     # Datos para los filtros
     state_choices = Idea.STATES
 
@@ -102,7 +120,11 @@ def idea_detail(request, idea_id):
 def edit_idea(request, idea_id):
     idea = get_object_or_404(Idea, id=idea_id)
     program = idea.program  # Obtener el programa asociado para cargar sus campos extras
-
+    
+    if idea.state == 'completed':
+        messages.error(request, "No puedes editar una idea que ya ha sido completada.")
+        return redirect('my_ideas')
+    
     if request.method == 'POST':
         post_data = request.POST.copy()
         post_data['program'] = program.id
@@ -231,6 +253,11 @@ def committee_review_ideas(request):
 def committee_review_idea(request, idea_id):
     idea = get_object_or_404(Idea, id=idea_id, program__committee_members=request.user)
     allowed_states = ['committee_approved', 'committee_rejected']
+    # Limpiar el valor del campo para evitar 'None' o espacios
+    if not idea.committee_feedback:
+        idea.committee_feedback = ""
+    else:
+        idea.committee_feedback = idea.committee_feedback.strip()
 
     if request.method == 'POST':
         comments = request.POST.get('committee_feedback', '')
@@ -277,10 +304,27 @@ def committee_review_idea(request, idea_id):
         'allowed_states': allowed_states,
     })
 
+
+@login_required
+def committee_view_idea(request, idea_id):
+    """
+    Vista para mostrar los detalles de la idea, junto con las calificaciones y comentarios del comité.
+    """
+    idea = get_object_or_404(Idea, id=idea_id, program__committee_members=request.user)
+    committee_ratings = CommitteeRating.objects.filter(idea=idea)
+
+    return render(request, 'committe/committee_view_idea.html', {
+        'idea': idea,
+        'committee_ratings': committee_ratings,
+    })
+
+
 @login_required
 def coordinator_assign_team(request):
     query = request.GET.get('q', '')
-    ideas = Idea.objects.filter(Q(state='committee_approved') | Q(state='adjustments_required_by_sponsor'))
+    ideas = Idea.objects.filter(
+        Q(state='committee_approved') | Q(state='adjustments_required_by_sponsor')
+    ).exclude(team__isnull=False)  # Excluir ideas con equipo asignado
 
     if query:
         ideas = ideas.filter(
@@ -295,10 +339,14 @@ def coordinator_assign_team(request):
         'teams': teams,
     })
 
+
 @login_required
 def coordinator_assign_team_detail(request, idea_id):
     idea = get_object_or_404(Idea, id=idea_id)
     team_members = User.objects.filter(profile__roles__name='Empleado')  # Filtrar empleados
+
+    # Obtener calificaciones y comentarios del comité
+    committee_ratings = CommitteeRating.objects.filter(idea=idea)
 
     if request.method == 'POST':
         team_name = request.POST.get('team_name')
@@ -342,7 +390,9 @@ def coordinator_assign_team_detail(request, idea_id):
         'idea': idea,
         'team_members': team_members,
         'sponsor_comment': idea.sponsor_adjustment_comments,
+        'committee_ratings': committee_ratings,  # Enviar datos del comité
     })
+
 
 @login_required
 def sponsor_review_list(request):
@@ -398,7 +448,7 @@ def sponsor_review_detail(request, idea_id):
                 idea.sponsor_adjustment_comments = comments
             idea.save()
 
-            # Notificar al empleado y a los coordinadores sobre la decisión del sponsor
+            # Notificar al empleado y a los coordinadores
             Notification.objects.create(
                 user=idea.employee,
                 related_idea=idea,
@@ -425,6 +475,7 @@ def sponsor_review_detail(request, idea_id):
         'idea': idea,
         'sponsor_decision': sponsor_decision,
     })
+
 
 @login_required
 def team_detail(request, team_id):

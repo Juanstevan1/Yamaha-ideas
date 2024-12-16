@@ -18,4 +18,5 @@ urlpatterns = [
     path('sponsor/review/<int:idea_id>/', views.sponsor_review_detail, name='sponsor_review_detail'),
     path('coordinator/team/<int:team_id>/', views.team_detail, name='team_detail'),
     path('team/edit_idea/<int:idea_id>/', team_edit_idea, name='team_edit_idea'),
+    path('committee/ideas/<int:idea_id>/view/', views.committee_view_idea, name='committee_view_idea'),
 ]

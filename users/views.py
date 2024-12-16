@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.sessions.models import Session
 from django.utils.timezone import now
+from django.contrib.messages import get_messages
 
 @login_required
 def dashboard_view(request):
@@ -16,21 +17,23 @@ def dashboard_view(request):
 
     # Calcular indicadores generales
     ideas = Idea.objects.filter(employee=request.user)
+
+    # Contar estados
     pending_ideas = ideas.filter(state='pending').count()
     reviewed_ideas = ideas.filter(state='reviewed_by_coordinator').count()
-    evaluated_ideas = ideas.filter(state='evaluated_by_committee').count()
-    approved_ideas = ideas.filter(state='approved').count()
-    rejected_ideas = ideas.filter(state='rejected').count()
+    committee_approved = ideas.filter(state='committee_approved').count()
+    rejected_ideas = ideas.filter(state__in=['coordinator_rejected', 'committee_rejected', 'sponsor_rejected']).count()
     in_progress_ideas = ideas.filter(state='in_progress').count()
+    completed_ideas = ideas.filter(state='completed').count()
+
+    # Promedio de calificaciones del comité
+    committee_ratings = ideas.filter(ratings__isnull=False).aggregate(avg_rating=Avg('ratings__rating'))['avg_rating'] or 0
+
+    # Equipos asignados
+    assigned_teams = ideas.filter(team__isnull=False).distinct().count()
 
     # Última idea propuesta
     last_idea = ideas.order_by('-creation_date').first()
-
-    # Promedio de calificaciones del comité
-    committee_ratings = ideas.filter(state='evaluated_by_committee').aggregate(avg_rating=Avg('committee_rating'))['avg_rating'] or 0
-
-    # Equipos asignados a ideas del usuario
-    assigned_teams = ideas.filter(state='in_progress', assigned_team__isnull=False).distinct().count()
 
     # Notificaciones no leídas
     unread_notifications = list(Notification.objects.filter(user=request.user, read=False))
@@ -44,13 +47,13 @@ def dashboard_view(request):
         'last_idea_title': last_idea.title if last_idea else 'N/A',
         'pending_ideas': pending_ideas,
         'reviewed_ideas': reviewed_ideas,
-        'evaluated_ideas': evaluated_ideas,
-        'approved_ideas': approved_ideas,
+        'approved_ideas': committee_approved,
         'rejected_ideas': rejected_ideas,
         'in_progress_ideas': in_progress_ideas,
+        'completed_ideas': completed_ideas,
         'committee_ratings': round(committee_ratings, 1),
         'assigned_teams': assigned_teams,
-        'notifications': unread_notifications,  # Convertido en lista
+        'notifications': unread_notifications,
     }
 
     # Opciones por rol
@@ -82,7 +85,13 @@ def dashboard_view(request):
         'actions': actions,
     })
 
+
 def login_view(request):
+    # Elimina cualquier mensaje persistente
+    storage = get_messages(request)
+    for _ in storage:
+        pass
+
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -92,6 +101,7 @@ def login_view(request):
             return redirect('dashboard')  # Redirige al dashboard después de iniciar sesión
         else:
             messages.error(request, 'Usuario o contraseña incorrectos.')
+
     return render(request, 'users/login.html')
 
 @login_required

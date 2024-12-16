@@ -12,12 +12,22 @@
             <p class="card-text text-muted"><strong>Descripción:</strong> {{ idea.description }}</p>
             <p class="card-text text-muted"><strong>Programa:</strong> {{ idea.program.name }}</p>
 
-            <!-- Mostrar comentario del sponsor si existe -->
-            {% if sponsor_comment and idea.state == "adjustments_required_by_sponsor" %}
-            <div class="alert alert-warning mt-4" style="border-radius: 8px;">
-                <strong>Comentario del Sponsor:</strong>
-                <p>{{ sponsor_comment }}</p>
-            </div>
+            <!-- Mostrar Comentarios y Calificaciones del Comité -->
+            <h4 class="mt-4" style="color: #004085;">Comentarios y Calificaciones del Comité</h4>
+            {% if committee_ratings %}
+                <ul class="list-group mb-4">
+                    {% for rating in committee_ratings %}
+                        <li class="list-group-item">
+                            <p><strong>Miembro del Comité:</strong> {{ rating.committee_member.get_full_name }}</p>
+                            <p><strong>Comentarios:</strong> {{ rating.comments }}</p>
+                            <p><strong>Calificación:</strong> {{ rating.rating }}/5</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="alert alert-info" style="border-radius: 8px;">
+                    No hay calificaciones del comité disponibles.
+                </div>
             {% endif %}
 
             <!-- Formulario para asignar equipo -->
