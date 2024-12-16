@@ -24,7 +24,6 @@ urlpatterns = [
     path('', include('home.urls')),
     path('users/', include('users.urls')),
     path('ideas/', include('ideas.urls')),
-    
 ]
 
 if settings.DEBUG:
